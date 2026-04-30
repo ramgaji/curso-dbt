@@ -5,19 +5,120 @@ sources:
     database: DE56_DEV_BRONZE_DB
     schema: POSTGRE_DB
 
-    quoting:
-      database: false
-      schema: false
-      identifier: false
-
     tables:
-      - name: ADDRESSES
 
-      - name: ORDERITEMS
+      - name: addresses
+        columns:
+          - name: address_id
+            data_type: varchar
+          - name: zipcode
+            data_type: number
+          - name: country
+            data_type: varchar
+          - name: address
+            data_type: varchar
+          - name: state
+            data_type: varchar
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
 
-      - name: ORDERS
-      - name: PRODUCTS
+      - name: orderitems
+        columns:
+          - name: order_id
+            data_type: varchar
+          - name: product_id
+            data_type: varchar
+          - name: quantity
+            data_type: number
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
 
-      - name: PROMOS
+      - name: orders
+        columns:
+          - name: order_id
+            data_type: varchar
+          - name: shipping_service
+            data_type: varchar
+          - name: shipping_cost
+            data_type: number
+          - name: address_id
+            data_type: varchar
+          - name: created_at
+            data_type: timestamp_ntz
+          - name: promo_id
+            data_type: varchar
+          - name: estimated_delivery_at
+            data_type: timestamp_ntz
+          - name: order_cost
+            data_type: number
+          - name: user_id
+            data_type: varchar
+          - name: order_total
+            data_type: number
+          - name: delivered_at
+            data_type: timestamp_ntz
+          - name: tracking_id
+            data_type: varchar
+          - name: status
+            data_type: varchar
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
 
-      - name: USERS
+      - name: products
+        columns:
+          - name: product_id
+            data_type: varchar
+          - name: price
+            data_type: number
+          - name: name
+            data_type: varchar
+          - name: inventory
+            data_type: number
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+
+      - name: promos
+        columns:
+          - name: promo_id
+            data_type: varchar
+          - name: discount
+            data_type: number
+          - name: status
+            data_type: varchar
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz
+
+      - name: users
+        columns:
+          - name: user_id
+            data_type: varchar
+          - name: updated_at
+            data_type: timestamp_ntz
+          - name: address_id
+            data_type: varchar
+          - name: last_name
+            data_type: varchar
+          - name: created_at
+            data_type: timestamp_ntz
+          - name: phone_number
+            data_type: varchar
+          - name: total_orders
+            data_type: varchar
+          - name: first_name
+            data_type: varchar
+          - name: email
+            data_type: varchar
+          - name: _fivetran_deleted
+            data_type: varchar
+          - name: _fivetran_synced
+            data_type: timestamp_ntz

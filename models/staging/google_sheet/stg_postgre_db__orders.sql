@@ -3,7 +3,7 @@
 WITH src_orders AS (
 
     SELECT *
-    FROM {{ source('postgre_db', 'ORDERS') }}
+    FROM {{ source('postgre_db', 'orders') }}
 
 ),
 
