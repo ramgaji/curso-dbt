@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: fact_orders
+  - name: fct_orders
     description: "Modelo de órdenes enriquecido con información de direcciones y usuarios"
     columns:
       - name: order_id
@@ -57,7 +57,7 @@ models:
 
 semantic_models:
   - name: orders
-    model: ref('fact_orders')
+    model: ref('fct_orders')
     description: "Semantic model de órdenes"
 
     defaults:
