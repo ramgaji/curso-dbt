@@ -1,0 +1,127 @@
+version: 2
+
+models:
+  - name: fact_orders
+    description: "Modelo de órdenes enriquecido con información de direcciones y usuarios"
+    columns:
+      - name: order_id
+        description: "Identificador único de la orden"
+        tests:
+          - unique
+          - not_null
+
+      - name: shipping_service
+        description: "Servicio de envío utilizado"
+
+      - name: address_id
+        description: "Identificador de la dirección de envío"
+        tests:
+          - not_null
+
+      - name: user_id
+        description: "Identificador del usuario que realizó la orden"
+        tests:
+          - not_null
+
+      - name: delivered_at
+        description: "Fecha y hora de entrega de la orden"
+
+      - name: tracking_id
+        description: "Identificador de seguimiento del envío"
+
+      - name: status
+        description: "Estado actual de la orden"
+
+      - name: _fivetran_deleted
+        description: "Flag de borrado lógico de Fivetran"
+
+      - name: _fivetran_synced
+        description: "Timestamp de la última sincronización de Fivetran"
+
+      - name: order_date
+        description: "Fecha de creación de la orden casteada a TIMESTAMP_NTZ"
+        tests:
+          - not_null
+
+      - name: address_country
+        description: "País de la dirección de envío"
+
+      - name: order_total
+        description: "Importe total de la orden"
+
+      - name: order_cost
+        description: "Coste de la orden sin envío"
+
+      - name: shipping_cost
+        description: "Coste del envío"
+
+semantic_models:
+  - name: orders
+    model: ref('fact_orders')
+    description: "Semantic model de órdenes"
+
+    defaults:
+      agg_time_dimension: order_date
+
+    entities:
+      - name: orders
+        type: primary
+        expr: order_id
+
+      - name: address
+        type: foreign
+        expr: address_id
+
+      - name: user
+        type: foreign
+        expr: user_id
+
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+        expr: order_date
+
+      - name: status
+        type: categorical
+        expr: status
+
+      - name: pais
+        type: categorical
+        expr: address_country
+
+    measures:
+      - name: order_total
+        agg: sum
+        expr: order_total
+
+      - name: order_cost
+        agg: sum
+        expr: order_cost
+
+      - name: shipping_cost
+        agg: sum
+        expr: shipping_cost
+
+metrics:
+  - name: total_revenue
+    label: Total Revenue
+    description: "Importe total de las órdenes"
+    type: simple
+    type_params:
+      measure: order_total
+
+  - name: total_cost
+    label: Total Cost
+    description: "Coste total de las órdenes sin envío"
+    type: simple
+    type_params:
+      measure: order_cost
+
+  - name: total_shipping
+    label: Total Shipping
+    description: "Coste total de envío"
+    type: simple
+    type_params:
+      measure: shipping_cost
