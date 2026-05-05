@@ -1,7 +1,7 @@
 {{ config(
     materialized='incremental',
     incremental_strategy='merge',
-    unique_key='PROMO_ID'
+    unique_key='promo_id'
 ) }}
 
 WITH src AS (

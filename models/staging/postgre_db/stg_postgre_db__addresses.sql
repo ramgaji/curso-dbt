@@ -1,7 +1,7 @@
 {{ config(
     materialized='incremental',
     incremental_strategy='delete+insert',
-    unique_key='ADDRESS_ID'
+    unique_key='address_id'
 ) }}
 
 WITH src AS (

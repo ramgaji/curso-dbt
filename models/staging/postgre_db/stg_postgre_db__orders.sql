@@ -1,6 +1,6 @@
 {{ config(
     materialized='incremental',
-    unique_key='ORDER_ID'
+    unique_key='order_id'
 ) }}
 
 WITH src AS (
