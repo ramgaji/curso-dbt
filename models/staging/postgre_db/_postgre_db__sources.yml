@@ -4,7 +4,12 @@ sources:
   - name: postgre_db
     database: DE56_DEV_BRONZE_DB
     schema: POSTGRE_DB
-
+    
+    config:
+      freshness:
+        warn_after: {count: 24, period: hour}
+        error_after: {count: 48, period: hour}
+    
     tables:
 
       - name: addresses
