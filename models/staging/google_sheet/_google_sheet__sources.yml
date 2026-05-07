@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: google_sheet
+    database: DE56_DEV_BRONZE_DB
+    schema: GOOGLE_SHEET
+
+    quoting:
+      database: false
+      schema: false
+      identifier: false
+
+
+    tables:
+      - name: BUDGET
+
+        columns:
+          - name: _ROW
+          - name: PRODUCT_ID
+          - name: QUANTITY
+          - name: MONTH
+          - name: _FIVETRAN_SYNCED

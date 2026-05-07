@@ -1,0 +1,281 @@
+version: 2
+
+models:
+  - name: stg_postgre_db__orders
+    description: "Modelo staging de pedidos."
+    columns:
+      - name: order_id
+        data_type: varchar
+        description: "Identificador único del pedido."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: user_id
+        data_type: varchar
+        description: "Identificador del usuario que realizó el pedido."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_postgre_db__users')
+                field: user_id
+
+      - name: promo_id
+        data_type: varchar
+        description: "Identificador de la promoción aplicada."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_postgre_db__promos')
+                field: promo_id
+
+      - name: address_id
+        data_type: varchar
+        description: "Identificador de la dirección del pedido."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_postgre_db__addresses')
+                field: address_id
+
+      - name: created_at
+        data_type: timestamp_ntz
+        description: "Fecha de creación del pedido."
+        data_tests:
+          - not_null
+
+      - name: shipping_service
+        data_type: varchar
+        description: "Servicio de envío utilizado."
+
+      - name: shipping_cost
+        data_type: number
+        description: "Coste del envío."
+
+      - name: estimated_delivery_at
+        data_type: timestamp_ntz
+        description: "Fecha estimada de entrega."
+
+      - name: order_cost
+        data_type: number
+        description: "Coste total del pedido."
+
+      - name: status
+        data_type: varchar
+        description: "Estado del pedido."
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['pending', 'preparing', 'shipped', 'delivered', 'cancelled']
+
+      - name: _fivetran_deleted
+        data_type: varchar
+        description: "Flag de borrado lógico de Fivetran."
+
+      - name: _fivetran_synced
+        data_type: timestamp_ntz
+        description: "Fecha de sincronización de Fivetran."
+
+  - name: stg_postgre_db__users
+    description: "Modelo staging de usuarios."
+    columns:
+      - name: user_id
+        data_type: varchar
+        description: "Identificador único del usuario."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: first_name
+        data_type: varchar
+        description: "Nombre del usuario."
+
+      - name: last_name
+        data_type: varchar
+        description: "Apellido del usuario."
+
+      - name: email
+        data_type: varchar
+        description: "Email del usuario."
+        data_tests:
+          - not_null
+          - unique
+
+      - name: phone_number
+        data_type: varchar
+        description: "Teléfono del usuario."
+
+      - name: address_id
+        data_type: varchar
+        description: "Identificador de la dirección del usuario."
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_postgre_db__addresses')
+                field: address_id
+
+      - name: created_at
+        data_type: timestamp_ntz
+        description: "Fecha de creación del usuario."
+
+      - name: updated_at
+        data_type: timestamp_ntz
+        description: "Fecha de última actualización del usuario."
+
+      - name: total_orders
+        data_type: varchar
+        description: "Número total de pedidos del usuario."
+
+      - name: _fivetran_deleted
+        data_type: varchar
+        description: "Flag de borrado lógico de Fivetran."
+
+      - name: _fivetran_synced
+        data_type: timestamp_ntz
+        description: "Fecha de sincronización de Fivetran."
+
+  - name: stg_postgre_db__addresses
+    description: "Modelo staging de direcciones."
+    columns:
+      - name: address_id
+        data_type: varchar
+        description: "Identificador único de la dirección."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: zipcode
+        data_type: number
+        description: "Código postal."
+
+      - name: country
+        data_type: varchar
+        description: "País."
+
+      - name: address
+        data_type: varchar
+        description: "Dirección completa."
+
+      - name: state
+        data_type: varchar
+        description: "Estado o provincia."
+
+      - name: _fivetran_deleted
+        data_type: varchar
+        description: "Flag de borrado lógico de Fivetran."
+
+      - name: _fivetran_synced
+        data_type: timestamp_ntz
+        description: "Fecha de sincronización de Fivetran."
+
+  - name: stg_postgre_db__products
+    description: "Modelo staging de productos."
+    columns:
+      - name: product_id
+        data_type: varchar
+        description: "Identificador único del producto."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: name
+        data_type: varchar
+        description: "Nombre del producto."
+        data_tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              arguments:
+                min_value: 0
+                max_value: 10000
+
+      - name: price
+        data_type: number
+        description: "Precio del producto."
+
+      - name: inventory
+        data_type: number
+        description: "Inventario disponible."
+
+      - name: _fivetran_deleted
+        data_type: varchar
+        description: "Flag de borrado lógico de Fivetran."
+
+      - name: _fivetran_synced
+        data_type: timestamp_ntz
+        description: "Fecha de sincronización de Fivetran."
+
+  - name: stg_postgre_db__promos
+    description: "Modelo staging de promociones."
+    columns:
+      - name: promo_id
+        data_type: varchar
+        description: "Identificador único de la promoción."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: discount
+        data_type: number
+        description: "Descuento aplicado."
+
+      - name: status
+        data_type: varchar
+        description: "Estado de la promoción."
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['active', 'inactive']
+
+      - name: _fivetran_deleted
+        data_type: varchar
+        description: "Flag de borrado lógico de Fivetran."
+
+      - name: _fivetran_synced
+        data_type: timestamp_ntz
+        description: "Fecha de sincronización de Fivetran."
+
+  - name: stg_postgre_db__orderitems
+    description: "Modelo staging de líneas de pedido."
+  
+    data_tests:
+    - dbt_utils.unique_combination_of_columns:
+        arguments:
+          combination_of_columns:
+            - order_id
+            - product_id
+    columns:
+      - name: order_id
+        data_type: varchar
+        description: "Identificador del pedido."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_postgre_db__orders')
+                field: order_id
+
+      - name: product_id
+        data_type: varchar
+        description: "Identificador del producto."
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_postgre_db__products')
+                field: product_id
+
+      - name: quantity
+        data_type: number
+        description: "Cantidad de producto en el pedido."
+        data_tests:
+          - not_null
+
+      - name: _fivetran_deleted
+        data_type: varchar
+        description: "Flag de borrado lógico de Fivetran."
+
+      - name: _fivetran_synced
+        data_type: timestamp_ntz
+        description: "Fecha de sincronización de Fivetran."
